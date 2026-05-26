@@ -7,11 +7,13 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\file\FileInterface;
+use Exception;
 
 abstract class EnumBackedEntityBase extends ContentEntityBase implements EnumBackedEntityInterface
 {
     /**
      * {@inheritdoc}
+     * @noinspection PhpUnreachableStatementInspection
      */
     public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array
     {
@@ -44,9 +46,15 @@ abstract class EnumBackedEntityBase extends ContentEntityBase implements EnumBac
     }
 
     /**
+     * Returns the Enum class that defines the fields for this entity.
+     *
      * @return class-string<FieldEnumInterface>
+     * @throws Exception If the child class does not override this method.
      */
-    abstract protected static function getFieldEnumClass(): string;
+    protected static function getFieldEnumClass(): string
+    {
+        throw new Exception('The entity class ' . static::class . ' must override the static getFieldEnumClass() method.');
+    }
 
     /**
      * {@inheritdoc}
