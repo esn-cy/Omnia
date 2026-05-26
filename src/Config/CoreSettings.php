@@ -20,6 +20,17 @@ class CoreSettings
         }
     }
 
+    public function getStripeSwitch(): ?bool
+    {
+        return $this->config->get('switch_stripe') ?? false;
+    }
+
+    public function setStripeSwitch(bool $value): self
+    {
+        $this->config->set('switch_stripe', $value);
+        return $this;
+    }
+
     public function getGoogleSwitch(): ?bool {
         return $this->config->get('switch_google') ?? false;
     }
@@ -38,30 +49,12 @@ class CoreSettings
         return $this;
     }
 
-    public function getEmailAddress(): ?string {
-        return $this->config->get('email_address') ?? null;
+    public function getStripeSecretKey(): ?string {
+        return $this->config->get('stripe_secret_key') ?? null;
     }
 
-    public function setEmailAddress(string $value): self {
-        $this->config->set('email_address', $value);
-        return $this;
-    }
-
-    public function getEmailName(): ?string {
-        return $this->config->get('email_name') ?? null;
-    }
-
-    public function setEmailName(string $value): self {
-        $this->config->set('email_name', $value);
-        return $this;
-    }
-
-    public function getEmailFooter(): ?string {
-        return $this->config->get('email_footer') ?? null;
-    }
-
-    public function setEmailFooter(string $value): self {
-        $this->config->set('email_footer', $value);
+    public function setStripeSecretKey(string $value): self {
+        $this->config->set('stripe_secret_key', $value);
         return $this;
     }
 

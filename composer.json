@@ -22,6 +22,7 @@
     }
   },
   "require": {
+    "stripe/stripe-php": "^20.1",
     "google/auth": "^1.50",
     "google/apiclient": "^2.19",
     "google/apiclient-services": "^0.441",

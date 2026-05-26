@@ -41,6 +41,16 @@ class SettingsForm extends ConfigFormBase
             '#open' => TRUE
         ];
 
+        $form['switches']['switch_stripe'] = [
+            '#type' => 'checkbox',
+            '#title' => $this->t('Enable Stripe Integration'),
+            '#default_value' => $form_state->getValue('switch_stripe') ?? $coreSettings->getStripeSwitch(),
+            '#ajax' => [
+                'callback' => '::switchToggle',
+                'wrapper' => 'esn-core-settings-wrapper'
+            ]
+        ];
+
         $form['switches']['switch_google'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('Enable Google Integration'),
@@ -61,35 +71,19 @@ class SettingsForm extends ConfigFormBase
             ]
         ];
 
-        $form['email'] = [
+        $form['stripe'] = [
             '#type' => 'details',
-            '#title' => $this->t('Email Settings'),
-            '#description' => $this->t('Configuration for the parameters needed for the Email Manager.'),
-            '#open' => true
+            '#title' => $this->t('Stripe Settings'),
+            '#description' => $this->t('Configuration for the Stripe Integration.'),
+            '#open' => $form_state->getValue('switch_stripe') ?? $coreSettings->getStripeSwitch()
         ];
 
-        $form['email']['email_address'] = [
+        $form['stripe']['stripe_secret_key'] = [
             '#type' => 'textfield',
-            '#title' => $this->t('Sender Email Address'),
-            '#description' => $this->t('Enter the email address from where the emails will be sent.'),
-            '#default_value' => $coreSettings->getEmailAddress(),
-            '#required' => true
-        ];
-
-        $form['email']['email_name'] = [
-            '#type' => 'textfield',
-            '#title' => $this->t('Sender Email Name'),
-            '#description' => $this->t('Enter the user-friendly name from where the emails will be sent.'),
-            '#default_value' => $coreSettings->getEmailName(),
-            '#required' => true
-        ];
-
-        $form['email']['email_footer'] = [
-            '#type' => 'textarea',
-            '#title' => $this->t('Email Footer'),
-            '#description' => $this->t('Enter the HTML for the footer of the emails to be sent.'),
-            '#default_value' => $coreSettings->getEmailFooter(),
-            '#required' => true
+            '#title' => $this->t('Stripe Secret Key'),
+            '#description' => $this->t('Enter the Stripe Secret Key.'),
+            '#default_value' => $form_state->getValue('switch_stripe') ?? $coreSettings->getStripeSecretKey(),
+            '#required' => !($form_state->getValue('switch_stripe') ?? $coreSettings->getStripeSwitch())
         ];
 
         $form['google'] = [
@@ -187,11 +181,10 @@ class SettingsForm extends ConfigFormBase
         $coreSettings = new CoreSettings($this->configFactory, true);
 
         $coreSettings
+            ->setStripeSwitch($form_state->getValue('switch_stripe'))
             ->setGoogleSwitch($form_state->getValue('switch_google'))
             ->setAppleSwitch($form_state->getValue('switch_apple'))
-            ->setEmailAddress($form_state->getValue('email_address'))
-            ->setEmailName($form_state->getValue('email_name'))
-            ->setEmailFooter($form_state->getValue('email_footer'))
+            ->setStripeSecretKey($form_state->getValue('stripe_secret_key'))
             ->setGoogleIssuerID($form_state->getValue('google_issuer_id'))
             ->setAppleTeamID($form_state->getValue('apple_team_id'));
 
