@@ -1,0 +1,7 @@
+.icon-esn-cyprus-core-config:before {
+    background-image: url("../images/core.svg");
+}
+.icon-esn-cyprus-core-config:active:before,
+.icon-esn-cyprus-core-config.is-active:before {
+    background-image: url("../images/core.svg");
+}

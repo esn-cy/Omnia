@@ -1,0 +1,13 @@
+admin_menu_icon_default:
+  version: 1.x
+  css:
+    theme:
+      assets/css/admin_icon_default.css: { }
+
+admin_menu_icon_gin:
+  version: 1.x
+  css:
+    theme:
+      assets/css/admin_icon_gin.css: { }
+  dependencies:
+    - 'toolbar/toolbar'

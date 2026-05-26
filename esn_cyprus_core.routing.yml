@@ -1,0 +1,15 @@
+esn_cyprus_core.home:
+  path: '/admin/esn-cyprus'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'ESN Cyprus Configuration Home'
+  requirements:
+    _permission: 'manage core settings'
+
+esn_cyprus_core.settings:
+  path: '/admin/esn-cyprus/core-settings'
+  defaults:
+    _form: '\Drupal\esn_cyprus_core\Form\SettingsForm'
+    _title: 'ESN Cyprus Core Settings'
+  requirements:
+    _permission: 'manage core settings'

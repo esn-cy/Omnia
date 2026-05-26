@@ -1,0 +1,16 @@
+esn_cyprus_core.category:
+  title: 'ESN Cyprus Core'
+  description: 'Manage ESN Cyprus modules.'
+  parent: system.admin
+  route_name: esn_cyprus_core.home
+  weight: 99
+  options:
+    attributes:
+      class:
+        - 'icon-esn-cyprus-core-config'
+
+esn_cyprus_core.settings:
+  title: 'Core Settings'
+  description: 'Manage shared ESN Cyprus Core settings.'
+  parent: esn_cyprus_core.category
+  route_name: esn_cyprus_core.settings

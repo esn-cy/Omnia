@@ -1,0 +1,50 @@
+{
+  "name": "esn-cy/core",
+  "type": "drupal-module",
+  "description": "A Drupal module that provides the core functionality for ESN Cyprus operations.",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/esn-cy/core",
+  "readme": "README.md",
+  "support": {
+    "email": "wpa@esncy.org",
+    "issues": "https://github.com/esn-cy/core/issues"
+  },
+  "authors" : [
+    {
+      "name": "Andreas Michael",
+      "email": "ateasm03@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Drupal\\esn_cyprus_core\\": "src/"
+    }
+  },
+  "require": {
+    "google/auth": "^1.50",
+    "google/apiclient": "^2.19",
+    "google/apiclient-services": "^0.441",
+    "pkpass/pkpass": "^2.5.1",
+    "ext-openssl": "*",
+    "ext-fileinfo": "*",
+    "esn-cy/enum-backed-entity": "*"
+  },
+  "require-dev": {
+    "drupal/core": "^10"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "drupal/core-vendor-hardening": true,
+      "drupal/core-recipe-unpack": true,
+      "drupal/core-project-message": true
+    }
+  },
+  "repositories": {
+    "drupal": {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  }
+}
