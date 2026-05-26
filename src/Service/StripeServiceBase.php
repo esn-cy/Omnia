@@ -10,6 +10,7 @@ use Exception;
 use Stripe\Event;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentLink;
+use Stripe\Price;
 use Stripe\StripeClient;
 use Stripe\Webhook;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,6 +53,8 @@ class StripeServiceBase
      *
      * @param array[] $prices An array containing the price IDs and quanitites to be included in the payment link.
      * @param ?array[] $metadata Optional: An array containing key pairs to be included in the payment link as metadata.
+     *
+     * @return ?PaymentLink The payment link object that was created, null if creation failed.
      *
      * @throws Exception It's thrown when the ESN Cyprus Core Stripe configuration is invalid.
      */
@@ -107,9 +110,9 @@ class StripeServiceBase
      * @param Request $request The request to be processed.
      * @param string $webhookSecret The webhook secret to be used to verify the request.
      *
-     * @throws Exception It's thrown when the ESN Cyprus Core Stripe configuration is invalid.
+     * @return ?Event The event object that was constructed, null if the event couldn't be cosntructed.
      */
-    public function createWebhookEvent(Request $request, string $webhookSecret): Event
+    public function createWebhookEvent(Request $request, string $webhookSecret): ?Event
     {
         $payload = $request->getContent();
         $signatureHeader = $request->headers->get('Stripe-Signature');
@@ -118,7 +121,30 @@ class StripeServiceBase
             return Webhook::constructEvent($payload, $signatureHeader, $webhookSecret);
         } catch (Exception $e) {
             $this->logger->error('Unable to construct webhook event. @error', ['@error' => $e->getMessage()]);
-            throw new Exception('Unable to construct webhook event. ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Gets price object from a given price ID.
+     *
+     * @param string $priceID The price ID to be retrieved.
+     *
+     * @return ?Price The price object that was retrieved, null if there was a problem retrieving it.
+     *
+     * @throws Exception It's thrown when the ESN Cyprus Core Stripe configuration is invalid.
+     */
+    public function getPrice(string $priceID): ?Price
+    {
+        if (!$this->getClient()) {
+            throw new Exception('Stripe Secret Key not set in the module configuration.');
+        }
+
+        try {
+            return $this->client->prices->retrieve($priceID);
+        } catch (Exception $e) {
+            $this->logger->error('Unable to get price. @error', ['@error' => $e->getMessage()]);
+            return null;
         }
     }
 }
