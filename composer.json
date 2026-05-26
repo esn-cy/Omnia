@@ -26,9 +26,7 @@
     "google/apiclient": "^2.19",
     "google/apiclient-services": "^0.441",
     "pkpass/pkpass": "^2.5.1",
-    "ext-openssl": "*",
-    "ext-fileinfo": "*",
-    "esn-cy/enum-backed-entity": "*"
+    "ext-fileinfo": "*"
   },
   "require-dev": {
     "drupal/core": "^10"

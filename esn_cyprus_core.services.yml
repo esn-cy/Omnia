@@ -14,21 +14,21 @@ services:
       - '@logger.factory'
 
   esn_cyprus_core.google_service:
-    class: Drupal\esn_cyprus_core\Service\GoogleService
+    class: Drupal\esn_cyprus_core\Service\GoogleServiceBase
     arguments:
       - '@config.factory'
       - '@esn_cyprus_core.file_service'
       - '@logger.factory'
 
   esn_cyprus_core.apple_service:
-    class: Drupal\esn_cyprus_core\Service\AppleWalletService
+    class: Drupal\esn_cyprus_core\Service\AppleWalletServiceBase
     arguments:
       - '@esn_cyprus_core.file_service'
       - '@http_client'
       - '@logger.factory'
 
   esn_cyprus_core.email_manager:
-    class: Drupal\esn_cyprus_core\Service\EmailManager
+    class: Drupal\esn_cyprus_core\Service\EmailManagerBase
     arguments:
       - '@logger.factory'
       - '@plugin.manager.mail'
