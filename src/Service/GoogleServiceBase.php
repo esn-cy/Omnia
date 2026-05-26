@@ -160,7 +160,7 @@ class GoogleServiceBase
      * @throws Exception
      * @throws GuzzleException
      */
-    public function getObject(string $className): ?string
+    public function getObject(string $objectName): ?string
     {
         $client = $this->getClient();
         if (!$client) {
@@ -171,7 +171,7 @@ class GoogleServiceBase
 
         $issuerID = $coreSettings->getGoogleIssuerID();
 
-        $objectID = "$issuerID.$className";
+        $objectID = "$issuerID.$objectName";
         try {
             $this->walletService->genericobject->get($objectID);
             return $this->getLink($objectID);
