@@ -95,7 +95,7 @@ class CoreSettings
 
     public function getSectionMode(): bool
     {
-        return $this->config->get('section_mode');
+        return $this->config->get('section_mode') ?? false;
     }
 
     public function setSectionMode(bool $value): self
