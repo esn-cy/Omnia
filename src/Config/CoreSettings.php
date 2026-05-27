@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace Drupal\esn_cyprus_core\Config;
 
@@ -20,7 +20,7 @@ class CoreSettings
         }
     }
 
-    public function getStripeSwitch(): ?bool
+    public function getStripeSwitch(): bool
     {
         return $this->config->get('switch_stripe') ?? false;
     }
@@ -31,7 +31,7 @@ class CoreSettings
         return $this;
     }
 
-    public function getGoogleSwitch(): ?bool {
+    public function getGoogleSwitch(): bool {
         return $this->config->get('switch_google') ?? false;
     }
 
@@ -40,12 +40,67 @@ class CoreSettings
         return $this;
     }
 
-    public function getAppleSwitch(): ?bool {
+    public function getAppleSwitch(): bool {
         return $this->config->get('switch_apple') ?? false;
     }
 
     public function setAppleSwitch(bool $value): self {
         $this->config->set('switch_apple', $value);
+        return $this;
+    }
+
+    public function getNationalOrganisationID(): ?int
+    {
+        return $this->config->get('national_organisation_id');
+    }
+
+    public function setNationalOrganisationID(int $value): self
+    {
+        $this->config->set('national_organisation_id', $value);
+        return $this;
+    }
+
+    public function getOrganisationID(): ?int
+    {
+        return $this->config->get('organisation_id');
+    }
+
+    public function setOrganisationID(int $value): self
+    {
+        $this->config->set('organisation_id', $value);
+        return $this;
+    }
+
+    public function getOrganisationName(): ?string
+    {
+        return $this->config->get('organisation_name');
+    }
+
+    public function setOrganisationName(string $value): self
+    {
+        $this->config->set('organisation_name', $value);
+        return $this;
+    }
+
+    public function getOrganisationLogoURL(): ?string
+    {
+        return $this->config->get('organisation_logo_url');
+    }
+
+    public function setOrganisationLogoURL(string $value): self
+    {
+        $this->config->set('organisation_logo_url', $value);
+        return $this;
+    }
+
+    public function getSectionMode(): bool
+    {
+        return $this->config->get('section_mode');
+    }
+
+    public function setSectionMode(bool $value): self
+    {
+        $this->config->set('section_mode', $value);
         return $this;
     }
 

@@ -2,13 +2,47 @@
 
 namespace Drupal\esn_cyprus_core\Form;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\esn_accounts_api\Entity\Organisation;
 use Drupal\esn_cyprus_core\Config\CoreSettings;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class SettingsForm extends ConfigFormBase
 {
+    protected EntityTypeManagerInterface $entityTypeManager;
+
+    public function __construct(
+        ConfigFactoryInterface     $configFactory,
+        EntityTypeManagerInterface $entityTypeManager,
+    )
+    {
+        parent::__construct($configFactory);
+        $this->entityTypeManager = $entityTypeManager;
+    }
+
+    public static function create(ContainerInterface $container): self
+    {
+        /** @var ConfigFactoryInterface $configFactory */
+        $configFactory = $container->get('config.factory');
+
+        /** @var EntityTypeManagerInterface $entityTypeManager */
+        $entityTypeManager = $container->get('entity_type.manager');
+
+        return new static(
+            $configFactory,
+            $entityTypeManager,
+        );
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -70,6 +104,92 @@ class SettingsForm extends ConfigFormBase
                 'wrapper' => 'esn-core-settings-wrapper'
             ]
         ];
+
+        $form['organisation'] =[
+            '#type' => 'details',
+            '#title' => $this->t('Organisation Settings'),
+            '#description' => $this->t('Configuration for the ESN Organisation.'),
+            '#open' => true
+        ];
+
+        try {
+            /** @var Organisation[] $nationalOrganisations */
+            $nationalOrganisations = $this->entityTypeManager->getStorage('esn_organisation')->loadByProperties(['type' => 'country']);
+        } catch (InvalidPluginDefinitionException|PluginNotFoundException) {
+            $form['organisation']['organisation_error'] = [
+                '#type' => 'markup',
+                '#markup' => '<div class="alert alert-warning">' . $this->t('Could not fetch the NOs from the ESN Accounts API. Please ensure that its works properly and try again.') . '</div>',
+            ];
+            return $form;
+        }
+
+        $noNames = [];
+        foreach ($nationalOrganisations as $no) {
+            $noNames[$no->id()] = $no->getTitle();
+        }
+        asort($noNames);
+
+        $form['organisation']['national_organisation_id'] = [
+            '#type' => 'select',
+            '#title' => $this->t('National Organisation Name'),
+            '#description' => $this->t('Select the name of your National Organisation.'),
+            '#options' => $noNames ?? [],
+            '#empty_option' => $this->t('- Select -'),
+            '#default_value' => $coreSettings->getNationalOrganisationID(),
+            '#required' => true,
+            '#ajax' => [
+                'callback' => '::toggleSectionMode',
+                'wrapper' => 'section-mode',
+            ],
+        ];
+
+        $form['organisation']['section_mode'] = [
+            '#type' => 'checkbox',
+            '#title' => $this->t('Enable Section Mode'),
+            '#default_value' => $coreSettings->getSectionMode(),
+            '#ajax' => [
+                'callback' => '::toggleSectionMode',
+                'wrapper' => 'section-mode',
+            ]
+        ];
+
+        $selectedNO = $form_state->getValue('national_organisation_id') ?: $coreSettings->getNationalOrganisationID();
+        $sectionModeEnabled = $form_state->getValue('section_mode') ?? $coreSettings->getSectionMode();
+
+        if ($sectionModeEnabled && !empty($selectedNO)) {
+            /** @var Organisation $nationalOrganisation */
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $nationalOrganisation = $this->entityTypeManager->getStorage('esn_organisation')->load($selectedNO);
+
+            if (!empty($nationalOrganisations)) {
+                /** @var Organisation[] $sections */
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $sections = $this->entityTypeManager->getStorage('esn_organisation')->loadByProperties(['type' => 'section', 'country_code' => $nationalOrganisation->getCountryCode()]);
+
+                foreach ($sections as $section) {
+                    $sectionNames[$section->id()] = $section->getTitle();
+                }
+                asort($sectionNames);
+            }
+        }
+
+        $form['organisation']['section_wrapper'] = [
+            '#type' => 'container',
+            '#attributes' => ['id' => 'section-mode-wrapper'],
+        ];
+
+        if ($sectionModeEnabled) {
+            $form['organisation']['section_wrapper']['section_id'] = [
+                '#type' => 'select',
+                '#title' => $this->t('Section Name'),
+                '#description' => $this->t('Select the name of your Section.'),
+                '#options' => $sectionNames ?? [],
+                '#empty_option' => $this->t('- Select -'),
+                '#default_value' => $coreSettings->getOrganisationID(),
+                '#required' => true,
+                '#validated' => true
+            ];
+        }
 
         $form['stripe'] = [
             '#type' => 'details',
@@ -180,10 +300,29 @@ class SettingsForm extends ConfigFormBase
     {
         $coreSettings = new CoreSettings($this->configFactory, true);
 
+        if ($form_state->getValue('section_mode')) {
+            $sectionMode = true;
+            $sectionID = $form_state->getValue('section_id');
+            /** @var Organisation $selectedOrganisation */
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $selectedOrganisation = $this->entityTypeManager->getStorage('esn_organisation')->load($sectionID);
+        } else {
+            $sectionMode = false;
+            $nationalOrganisationID = $form_state->getValue('national_organisation_id');
+            /** @var Organisation $selectedOrganisation */
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $selectedOrganisation = $this->entityTypeManager->getStorage('esn_organisation')->load($nationalOrganisationID);
+        }
+
         $coreSettings
             ->setStripeSwitch($form_state->getValue('switch_stripe'))
             ->setGoogleSwitch($form_state->getValue('switch_google'))
             ->setAppleSwitch($form_state->getValue('switch_apple'))
+            ->setNationalOrganisationID($form_state->getValue('national_organisation_id'))
+            ->setOrganisationID($form_state->getValue('organisation_id'))
+            ->setOrganisationName($selectedOrganisation->getTitle())
+            ->setOrganisationLogoURL($selectedOrganisation->getRemoteLogoPath())
+            ->setSectionMode($sectionMode)
             ->setStripeSecretKey($form_state->getValue('stripe_secret_key'))
             ->setGoogleIssuerID($form_state->getValue('google_issuer_id'))
             ->setAppleTeamID($form_state->getValue('apple_team_id'));
@@ -208,5 +347,21 @@ class SettingsForm extends ConfigFormBase
     public function switchToggle(array $form, FormStateInterface $form_state): array
     {
         return $form;
+    }
+
+    public function toggleSectionMode(array $form, FormStateInterface $form_state): AjaxResponse
+    {
+        $response = new AjaxResponse();
+
+        if (empty($form_state->getValue('national_organisation_id')) && $form_state->getValue('section_mode')) {
+            $this->messenger()->addError($this->t('Please select your National Organisation before you enable Section Mode.'));
+
+            $response->addCommand(new PrependCommand('#section-mode-wrapper', ['#type' => 'status_messages']));
+            $response->addCommand(new ReplaceCommand('#section-mode-wrapper', $form['organisation']['section_wrapper']));
+            return $response;
+        }
+
+        $response->addCommand(new ReplaceCommand('#section-mode-wrapper', $form['organisation']['section_wrapper']));
+        return $response;
     }
 }
