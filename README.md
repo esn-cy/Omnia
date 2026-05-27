@@ -24,6 +24,8 @@ This module registers several core services that can be injected into your custo
   library and handles sending APNs push notifications for pass updates.
 * **Email Manager (`esn_cyprus_core.email_manager`)**: A utility for sending emails seamlessly using Drupal's Twig
   rendering system in isolation.
+* **Stripe Service (`esn_cyprus_core.stripe_service`)**: Integration with the Stripe API for creating payment links,
+  fetching prices, and validating webhooks.
 * **Enum-Backed Entities**: Provides base classes and interfaces (`EnumBackedEntityBase`, `EnumBackedEntityStorage`) to
   create Drupal content entities with strongly-typed, enum-backed fields.
 
@@ -31,6 +33,8 @@ This module registers several core services that can be injected into your custo
 
 This module requires **Drupal 10 or 11** and relies on several external PHP libraries managed via Composer:
 
+* `esn/esn_accounts_api` (^1.1)
+* `stripe/stripe-php` (^20.1)
 * `google/auth` (^1.50)
 * `google/apiclient` (^2.19)
 * `google/apiclient-services` (^0.441)
@@ -58,6 +62,7 @@ From the settings page, you can configure:
 
 * **Integrations Toggle**: Globally enable or disable Apple and Google integrations.
 * **Email Settings**: Define the default sender address, sender name, and the HTML footer for outgoing Twig emails.
+* **Stripe**: Set your Stripe Secret Key to enable Stripe API integrations.
 * **Google Wallet**: Upload your Google Service Account `.json` key file and define your Google Wallet Issuer ID. The
   module will securely parse the JSON file and extract the keys.
 * **Apple Wallet**: Set your Apple Team ID.

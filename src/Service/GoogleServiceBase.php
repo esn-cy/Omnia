@@ -37,6 +37,11 @@ class GoogleServiceBase
     }
 
 
+    /**
+     * Gets the initialized Google client.
+     *
+     * @return ?GoogleClient The Google client instance, or null if the configuration is missing or invalid.
+     */
     protected function getClient(): ?GoogleClient
     {
         if ($this->client) {
@@ -86,6 +91,12 @@ class GoogleServiceBase
     }
 
     /**
+     * Gets a Google Wallet generic class by its class name.
+     *
+     * @param string $className The name of the class to retrieve.
+     *
+     * @return string|null The class ID if found, or null if not found.
+     *
      * @throws Exception
      */
     protected function getClass(string $className): ?string
@@ -112,6 +123,12 @@ class GoogleServiceBase
     }
 
     /**
+     * Creates a new Google Wallet generic class.
+     *
+     * @param GenericClass $class The generic class object to create.
+     *
+     * @return string|null The ID of the created class, or null on failure.
+     *
      * @throws \Google\Service\Exception
      */
     protected function createClass(GenericClass $class): ?string
@@ -121,6 +138,12 @@ class GoogleServiceBase
     }
 
     /**
+     * Generates a save-to-wallet link for a given object ID.
+     *
+     * @param string $objectID The ID of the generic object.
+     *
+     * @return string The generated JWT link to save the object to Google Wallet.
+     *
      * @throws Exception
      */
     private function getLink(string $objectID): string
@@ -156,6 +179,12 @@ class GoogleServiceBase
     }
 
     /**
+     * Gets a Google Wallet generic object by its object name.
+     *
+     * @param string $objectName The name of the object to retrieve.
+     *
+     * @return string|null The save-to-wallet link if the object is found, or null if not found.
+     *
      * @throws \Google\Service\Exception
      * @throws Exception
      * @throws GuzzleException
@@ -185,6 +214,12 @@ class GoogleServiceBase
 
 
     /**
+     * Creates a new Google Wallet generic object.
+     *
+     * @param GenericObject $object The generic object to create.
+     *
+     * @return string|null The save-to-wallet link for the created object.
+     *
      * @throws \Google\Service\Exception
      * @throws Exception
      */
@@ -195,6 +230,12 @@ class GoogleServiceBase
     }
 
     /**
+     * Updates an existing Google Wallet generic object.
+     *
+     * @param GenericObject $object The generic object with updated data.
+     *
+     * @return bool True if the object was updated successfully, false otherwise.
+     *
      * @throws GuzzleException
      * @throws Exception
      */
@@ -220,6 +261,12 @@ class GoogleServiceBase
     }
 
     /**
+     * Deletes (expires) a Google Wallet generic object.
+     *
+     * @param string $objectID The ID of the object to delete.
+     *
+     * @return bool True if the object was deleted successfully, false otherwise.
+     *
      * @throws Exception
      */
     protected function deleteObject(string $objectID): bool
@@ -255,6 +302,12 @@ class GoogleServiceBase
     }
 
     /**
+     * Uploads a private image to Google Wallet.
+     *
+     * @param string $fileID The ID of the file entity representing the image.
+     *
+     * @return string The uploaded private image ID.
+     *
      * @throws Exception
      * @throws GuzzleException
      */

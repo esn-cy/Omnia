@@ -29,6 +29,15 @@ class AppleServiceBase
     }
 
     /**
+     * Creates an Apple Wallet pass.
+     *
+     * @param array $passData An array containing the pass data.
+     * @param array $images An array containing the paths to the images for the pass and their names.
+     * @param string $certificateP12 The P12 certificate string.
+     * @param string $certificatePassword The password for the P12 certificate.
+     *
+     * @return string|null The created pass data as a string, or null if creation failed.
+     *
      * @throws Exception
      */
     protected function createPass(array $passData, array $images, string $certificateP12, string $certificatePassword): ?string
@@ -52,6 +61,16 @@ class AppleServiceBase
         }
     }
 
+    /**
+     * Sends an update notification via Apple Push Notification service (APNs).
+     *
+     * @param string $pushToken The device push token.
+     * @param string $passTypeID The pass type ID.
+     * @param string $certificatePEM The PEM certificate string.
+     * @param string $certificatePassword The password for the PEM certificate.
+     *
+     * @return bool True if the notification was sent successfully, false otherwise.
+     */
     protected function sendUpdateNotification(string $pushToken, string $passTypeID, string $certificatePEM, string $certificatePassword): bool
     {
         $certificatePath = $this->fileService->getTemporaryFile('apns_cert_', '.pem');

@@ -30,6 +30,11 @@ class StripeServiceBase
         $this->logger = $loggerFactory->get('esn_membership_manager');
     }
 
+    /**
+     * Gets the initialized Stripe client.
+     *
+     * @return ?StripeClient The Stripe client instance, or null if the configuration is missing.
+     */
     private function getClient(): ?StripeClient
     {
         if ($this->client) {
