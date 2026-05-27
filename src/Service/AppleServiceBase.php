@@ -31,7 +31,7 @@ class AppleServiceBase
     /**
      * @throws Exception
      */
-    public function createPass(array $passData, array $images, string $certificateP12, string $certificatePassword): ?string
+    protected function createPass(array $passData, array $images, string $certificateP12, string $certificatePassword): ?string
     {
         $pass = new PKPass();
 
@@ -52,7 +52,7 @@ class AppleServiceBase
         }
     }
 
-    public function sendUpdateNotification(string $pushToken, string $passTypeID, string $certificatePEM, string $certificatePassword): bool
+    protected function sendUpdateNotification(string $pushToken, string $passTypeID, string $certificatePEM, string $certificatePassword): bool
     {
         $certificatePath = $this->fileService->getTemporaryFile('apns_cert_', '.pem');
 

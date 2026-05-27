@@ -88,7 +88,7 @@ class GoogleServiceBase
     /**
      * @throws Exception
      */
-    public function getClass(string $className): ?string
+    protected function getClass(string $className): ?string
     {
         $client = $this->getClient();
         if (!$client) {
@@ -114,7 +114,7 @@ class GoogleServiceBase
     /**
      * @throws \Google\Service\Exception
      */
-    public function createClass(GenericClass $class): ?string
+    protected function createClass(GenericClass $class): ?string
     {
         $response = $this->walletService->genericclass->insert($class);
         return $response->id;
@@ -160,7 +160,7 @@ class GoogleServiceBase
      * @throws Exception
      * @throws GuzzleException
      */
-    public function getObject(string $objectName): ?string
+    protected function getObject(string $objectName): ?string
     {
         $client = $this->getClient();
         if (!$client) {
@@ -198,7 +198,7 @@ class GoogleServiceBase
      * @throws GuzzleException
      * @throws Exception
      */
-    public function updateObject(GenericObject $object): bool
+    protected function updateObject(GenericObject $object): bool
     {
         $client = $this->getClient();
         if (!$client) {
@@ -222,7 +222,7 @@ class GoogleServiceBase
     /**
      * @throws Exception
      */
-    public function deleteObject(string $objectID): bool
+    protected function deleteObject(string $objectID): bool
     {
         $client = $this->getClient();
         if (!$client) {
@@ -258,7 +258,7 @@ class GoogleServiceBase
      * @throws Exception
      * @throws GuzzleException
      */
-    public function uploadPrivateImage(string $fileID): string
+    protected function uploadPrivateImage(string $fileID): string
     {
         $mimeType = $this->fileService->getFileMimeType($fileID);
         $imageContents = $this->fileService->readFile($fileID);

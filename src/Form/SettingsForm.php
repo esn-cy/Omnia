@@ -202,8 +202,8 @@ class SettingsForm extends ConfigFormBase
             '#type' => 'textfield',
             '#title' => $this->t('Stripe Secret Key'),
             '#description' => $this->t('Enter the Stripe Secret Key.'),
-            '#default_value' => $form_state->getValue('switch_stripe') ?? $coreSettings->getStripeSecretKey(),
-            '#required' => !($form_state->getValue('switch_stripe') ?? $coreSettings->getStripeSwitch())
+            '#default_value' => $form_state->getValue('stripe_secret_key') ?? $coreSettings->getStripeSecretKey(),
+            '#required' => $form_state->getValue('switch_stripe') ?? $coreSettings->getStripeSwitch()
         ];
 
         $form['google'] = [
@@ -319,7 +319,7 @@ class SettingsForm extends ConfigFormBase
             ->setGoogleSwitch($form_state->getValue('switch_google'))
             ->setAppleSwitch($form_state->getValue('switch_apple'))
             ->setNationalOrganisationID($form_state->getValue('national_organisation_id'))
-            ->setOrganisationID($form_state->getValue('organisation_id'))
+            ->setOrganisationID($selectedOrganisation->id())
             ->setOrganisationName($selectedOrganisation->getTitle())
             ->setOrganisationLogoURL($selectedOrganisation->getRemoteLogoPath())
             ->setSectionMode($sectionMode)

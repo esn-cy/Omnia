@@ -176,7 +176,7 @@ class FileServiceBase
      *
      * @return string|null  The file ID of the created file, or `null` if the file cannot be created.
      */
-    public function createFile(string $fileData, string $directory, string $fileName, ?string $moduleName, ?array $entities): ?string
+    protected function createFile(string $fileData, string $directory, string $fileName, ?string $moduleName, ?array $entities): ?string
     {
         if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
             $this->logger->error('Failed to create or prepare directory: @directory', ['@directory' => $directory]);
@@ -213,7 +213,7 @@ class FileServiceBase
      *
      * @return bool True if the file was successfully saved and marked as used, false otherwise.
      */
-    public function saveFile(int|string|null $fileID, ?string $moduleName, ?array $entities): bool
+    protected function saveFile(int|string|null $fileID, ?string $moduleName, ?array $entities): bool
     {
         $file = $this->getFile($fileID);
         if (empty($file)) {
@@ -246,7 +246,7 @@ class FileServiceBase
      *
      * @return bool True if the file was successfully deleted, false otherwise.
      */
-    public function deleteFile(int|string|null $fileID, ?string $moduleName, ?array $entities): bool
+    protected function deleteFile(int|string|null $fileID, ?string $moduleName, ?array $entities): bool
     {
         $file = $this->getFile($fileID);
         if (empty($file)) {

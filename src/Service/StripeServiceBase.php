@@ -58,7 +58,7 @@ class StripeServiceBase
      *
      * @throws Exception It's thrown when the ESN Cyprus Core Stripe configuration is invalid.
      */
-    public function createPaymentLink(array $prices, ?array $metadata = null): ?PaymentLink
+    protected function createPaymentLink(array $prices, ?array $metadata = null): ?PaymentLink
     {
         if (!$this->getClient()) {
             throw new Exception('Stripe Secret Key not set in the module configuration.');
@@ -112,7 +112,7 @@ class StripeServiceBase
      *
      * @return ?Event The event object that was constructed, null if the event couldn't be cosntructed.
      */
-    public function createWebhookEvent(Request $request, string $webhookSecret): ?Event
+    protected function createWebhookEvent(Request $request, string $webhookSecret): ?Event
     {
         $payload = $request->getContent();
         $signatureHeader = $request->headers->get('Stripe-Signature');
@@ -134,7 +134,7 @@ class StripeServiceBase
      *
      * @throws Exception It's thrown when the ESN Cyprus Core Stripe configuration is invalid.
      */
-    public function getPrice(string $priceID): ?Price
+    protected function getPrice(string $priceID): ?Price
     {
         if (!$this->getClient()) {
             throw new Exception('Stripe Secret Key not set in the module configuration.');
