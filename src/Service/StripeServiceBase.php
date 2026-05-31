@@ -57,7 +57,7 @@ class StripeServiceBase
      * Create a Stripe payment link for the given application.
      *
      * @param array[] $prices An array containing the price IDs and quanitites to be included in the payment link.
-     * @param ?array[] $metadata Optional: An array containing key pairs to be included in the payment link as metadata.
+     * @param ?string[] $metadata Optional: An array containing key pairs to be included in the payment link as metadata.
      *
      * @return ?PaymentLink The payment link object that was created, null if creation failed.
      *
