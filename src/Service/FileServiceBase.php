@@ -85,6 +85,24 @@ class FileServiceBase
     }
 
     /**
+     * Determines the file extension from the file contents.
+     *
+     * @param string $fileData The file data of which the extension will be determined.
+     */
+    private function getFileExtension(string $fileData): ?string
+    {
+        $fileInfo = new finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $fileInfo->buffer($fileData);
+
+        return match ($mimeType) {
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'application/pdf' => 'pdf',
+            default => null,
+        };
+    }
+
+    /**
      * Gets the web-accessible URL for a file.
      *
      * @param int|string|null $fileID The ID of the file entity.
@@ -191,7 +209,13 @@ class FileServiceBase
                 ? \Drupal\Core\File\FileExists::Replace // Drupal 10.3+
                 : \Drupal\Core\File\FileSystemInterface::EXISTS_REPLACE; // Drupal 9 / <10.3
 
-            $file = $this->fileRepository->writeData($fileData, "$directory/$fileName", $existsBehavior);
+            $extension = $this->getFileExtension($fileData);
+            if (!$extension) {
+                $this->logger->error('File creation error: Unsupported MIME type.');
+                return false;
+            }
+
+            $file = $this->fileRepository->writeData($fileData, "$directory/$fileName.$extension", $existsBehavior);
 
             if ($this->saveFile($file->id(), $moduleName, $entities)) {
                 return $file->id();
@@ -362,18 +386,9 @@ class FileServiceBase
             return false;
         }
 
-        $fileInfo = new finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $fileInfo->buffer($fileData);
-
-        $extension = match ($mimeType) {
-            'image/jpeg' => 'jpg',
-            'image/png' => 'png',
-            'application/pdf' => 'pdf',
-            default => null,
-        };
-
+        $extension = $this->getFileExtension($fileData);
         if (!$extension) {
-            $this->logger->error('File @id replace data error: Unsupported MIME type @mime', ['@id' => $fileID, '@mime' => $mimeType]);
+            $this->logger->error('File @id replace data error: Unsupported MIME type.');
             return false;
         }
 
@@ -395,7 +410,11 @@ class FileServiceBase
 
             $file->setFileUri($uri);
             $file->setFilename($filename);
-            $file->setMimeType($mimeType);
+            $file->setMimeType(match ($extension) {
+                'jpg' => 'image/jpeg',
+                'png' => 'image/png',
+                'pdf' => 'application/pdf',
+            });
             $file->setSize(strlen($fileData));
             $file->save();
 
