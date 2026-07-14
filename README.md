@@ -1,30 +1,30 @@
 <!--suppress HtmlDeprecatedAttribute -->
 <h1 align="center">
-    <img src="./assets/images/core.svg" width="200" alt="ESN Cyprus Core Logo"/><br>
-    ESN Cyprus Core
+    <img src="./assets/images/logo.svg" width="200" alt="Omnia Logo"/><br>
+    Omnia
 </h1>
 
-ESN Cyprus Core is a foundational Drupal module that provides shared functionality, utility services, and third-party
-integrations for ESN Cyprus operations.
+Omnia is an umbrella of services designed to help ESN digitalize its operations. It provides shared functionality,
+utility services, and third-party integrations as a foundational Drupal module.
 
-This module does not provide standalone user-facing features. Instead, it acts as a centralized library that other ESN
-Cyprus modules (like the [ESN Membership Manager](https://github.com/esn-cy/ESN-Membership-Manager)) can rely on for
+While it does not provide standalone user-facing features by itself, Omnia acts as a centralized ecosystem that other
+ESN Cyprus modules (like the [ESN Membership Manager](https://github.com/esn-cy/ESN-Membership-Manager)) can rely on for
 consistent file handling, email dispatching, and digital wallet integrations.
 
 ## Features & Services
 
 This module registers several core services that can be injected into your custom modules:
 
-* **File Service (`esn_cyprus_core.file_service`)**: A robust wrapper around Drupal's file system for creating, moving,
+* **File Service (`omnia.file_service`)**: A robust wrapper around Drupal's file system for creating, moving,
   replacing, and reading managed files, as well as handling temporary files.
-* **Google Wallet Service (`esn_cyprus_core.google_service`)**: Integration with the Google Wallet API using Service
+* **Google Wallet Service (`omnia.google_service`)**: Integration with the Google Wallet API using Service
   Account credentials. Handles creating, updating, and deleting Generic Classes and Objects, as well as uploading
   private images.
-* **Apple Wallet Service (`esn_cyprus_core.apple_service`)**: Generates `.pkpass` files using the `pkpass/pkpass`
+* **Apple Wallet Service (`omnia.apple_service`)**: Generates `.pkpass` files using the `pkpass/pkpass`
   library and handles sending APNs push notifications for pass updates.
-* **Email Manager (`esn_cyprus_core.email_manager`)**: A utility for sending emails seamlessly using Drupal's Twig
+* **Email Manager (`omnia.email_manager`)**: A utility for sending emails seamlessly using Drupal's Twig
   rendering system in isolation.
-* **Stripe Service (`esn_cyprus_core.stripe_service`)**: Integration with the Stripe API for creating payment links,
+* **Stripe Service (`omnia.stripe_service`)**: Integration with the Stripe API for creating payment links,
   fetching prices, and validating webhooks.
 * **Enum-Backed Entities**: Provides base classes and interfaces (`EnumBackedEntityBase`, `EnumBackedEntityStorage`) to
   create Drupal content entities with strongly-typed, enum-backed fields.
@@ -45,18 +45,18 @@ This module requires **Drupal 10 or 11** and relies on several external PHP libr
 
 1. Require the module via Composer to automatically fetch the external dependencies:
    ```bash
-   composer require esn-cy/core
+   composer require esn-cy/omnia
    ```
 2. Enable the module via Drush:
    ```bash
-   drush en esn_cyprus_core
+   drush en omnia
    ```
 
 ## Configuration
 
-To access the settings form, a user must have the `manage core settings` permission.
+To access the settings form, a user must have the `manage omnia settings` permission.
 
-Navigate to ESN Cyprus Core > Core Settings (/admin/esn-cyprus-core/settings).
+Navigate to Omnia > Omnia Settings (/admin/omnia/settings).
 
 From the settings page, you can configure:
 

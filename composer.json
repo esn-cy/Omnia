@@ -1,13 +1,13 @@
 {
-  "name": "esn-cy/core",
+  "name": "esn-cy/omnia",
   "type": "drupal-module",
-  "description": "A Drupal module that provides the core functionality for ESN Cyprus operations.",
+  "description": "An umbrella of services designed to help ESN digitalize its operations.",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/esn-cy/core",
+  "homepage": "https://github.com/esn-cy/omnia",
   "readme": "README.md",
   "support": {
     "email": "wpa@esncy.org",
-    "issues": "https://github.com/esn-cy/core/issues"
+    "issues": "https://github.com/esn-cy/omnia/issues"
   },
   "authors" : [
     {
@@ -18,7 +18,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "Drupal\\esn_cyprus_core\\": "src/"
+      "Drupal\\omnia\\": "src/"
     }
   },
   "require": {

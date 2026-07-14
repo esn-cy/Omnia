@@ -1,0 +1,16 @@
+omnia.category:
+  title: 'Omnia'
+  description: 'Manage Omnia modules.'
+  parent: system.admin
+  route_name: omnia.home
+  weight: 99
+  options:
+    attributes:
+      class:
+        - 'icon-omnia-config'
+
+omnia.settings:
+  title: 'Omnia Settings'
+  description: 'Manage shared Omnia settings.'
+  parent: omnia.category
+  route_name: omnia.settings

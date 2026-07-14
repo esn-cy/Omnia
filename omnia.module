@@ -3,16 +3,16 @@
 /**
  * Implements hook_element_info_alter().
  */
-function esn_cyprus_core_element_info_alter(array &$types): void
+function omnia_element_info_alter(array &$types): void
 {
     $themeConfig = Drupal::config('system.theme');
 
     if (isset($types['toolbar'])) {
         if ($themeConfig->get('admin') == 'gin') {
-            $types['toolbar']['#attached']['library'][] = 'esn_cyprus_core/admin_menu_icon_gin';
+            $types['toolbar']['#attached']['library'][] = 'omnia/admin_menu_icon_gin';
         }
         else {
-            $types['toolbar']['#attached']['library'][] = 'esn_cyprus_core/admin_menu_icon_default';
+            $types['toolbar']['#attached']['library'][] = 'omnia/admin_menu_icon_default';
         }
     }
 }

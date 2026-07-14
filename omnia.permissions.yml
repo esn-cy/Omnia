@@ -1,0 +1,4 @@
+manage omnia settings:
+  title: 'Manage the Omnia settings'
+  description: 'Allows users to manage the Omnia settings'
+  restrict access: true

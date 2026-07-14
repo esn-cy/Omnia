@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpUnused */
 
-namespace Drupal\esn_cyprus_core\Service;
+namespace Drupal\omnia\Service;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -43,7 +43,7 @@ class FileServiceBase
         $this->fileSystem = $fileSystem;
         $this->fileRepository = $fileRepository;
         $this->fileUsage = $fileUsage;
-        $this->logger = $loggerFactory->get('esn_cyprus_core');
+        $this->logger = $loggerFactory->get('omnia');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpUnused */
 
-namespace Drupal\esn_cyprus_core\Service;
+namespace Drupal\omnia\Service;
 
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
@@ -25,7 +25,7 @@ class AppleServiceBase
     {
         $this->fileService = $fileService;
         $this->httpClient = $httpClient;
-        $this->logger = $loggerFactory->get('esn_cyprus_core');
+        $this->logger = $loggerFactory->get('omnia');
     }
 
     /**

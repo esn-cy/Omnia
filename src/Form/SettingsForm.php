@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpUnused */
 
-namespace Drupal\esn_cyprus_core\Form;
+namespace Drupal\omnia\Form;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\esn_accounts_api\Entity\Organisation;
-use Drupal\esn_cyprus_core\Config\CoreSettings;
+use Drupal\omnia\Config\OmniaSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -48,7 +48,7 @@ class SettingsForm extends ConfigFormBase
      */
     protected function getEditableConfigNames(): array
     {
-        return [CoreSettings::CONFIG_NAME];
+        return [OmniaSettings::CONFIG_NAME];
     }
 
     /**
@@ -56,7 +56,7 @@ class SettingsForm extends ConfigFormBase
      */
     public function getFormId(): string
     {
-        return 'esn_cyprus_core_settings';
+        return 'omnia_settings';
     }
 
     /**
@@ -64,9 +64,9 @@ class SettingsForm extends ConfigFormBase
      */
     public function buildForm(array $form, FormStateInterface $form_state): array
     {
-        $coreSettings = new CoreSettings($this->configFactory);
+        $omniaSettings = new OmniaSettings($this->configFactory);
 
-        $form['#prefix'] = '<div id="esn-core-settings-wrapper">';
+        $form['#prefix'] = '<div id="omnia-settings-wrapper">';
         $form['#suffix'] = '</div>';
 
         $form['switches'] = [
@@ -78,30 +78,30 @@ class SettingsForm extends ConfigFormBase
         $form['switches']['switch_stripe'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('Enable Stripe Integration'),
-            '#default_value' => $form_state->getValue('switch_stripe') ?? $coreSettings->getStripeSwitch(),
+            '#default_value' => $form_state->getValue('switch_stripe') ?? $omniaSettings->getStripeSwitch(),
             '#ajax' => [
                 'callback' => '::switchToggle',
-                'wrapper' => 'esn-core-settings-wrapper'
+                'wrapper' => 'omnia-settings-wrapper'
             ]
         ];
 
         $form['switches']['switch_google'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('Enable Google Integration'),
-            '#default_value' => $form_state->getValue('switch_google') ?? $coreSettings->getGoogleSwitch(),
+            '#default_value' => $form_state->getValue('switch_google') ?? $omniaSettings->getGoogleSwitch(),
             '#ajax' => [
                 'callback' => '::switchToggle',
-                'wrapper' => 'esn-core-settings-wrapper'
+                'wrapper' => 'omnia-settings-wrapper'
             ]
         ];
 
         $form['switches']['switch_apple'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('Enable Apple Integration'),
-            '#default_value' => $form_state->getValue('switch_apple') ?? $coreSettings->getAppleSwitch(),
+            '#default_value' => $form_state->getValue('switch_apple') ?? $omniaSettings->getAppleSwitch(),
             '#ajax' => [
                 'callback' => '::switchToggle',
-                'wrapper' => 'esn-core-settings-wrapper'
+                'wrapper' => 'omnia-settings-wrapper'
             ]
         ];
 
@@ -135,7 +135,7 @@ class SettingsForm extends ConfigFormBase
             '#description' => $this->t('Select the name of your National Organisation.'),
             '#options' => $noNames ?? [],
             '#empty_option' => $this->t('- Select -'),
-            '#default_value' => $coreSettings->getNationalOrganisationID(),
+            '#default_value' => $omniaSettings->getNationalOrganisationID(),
             '#required' => true,
             '#ajax' => [
                 'callback' => '::toggleSectionMode',
@@ -146,15 +146,15 @@ class SettingsForm extends ConfigFormBase
         $form['organisation']['section_mode'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('Enable Section Mode'),
-            '#default_value' => $coreSettings->getSectionMode(),
+            '#default_value' => $omniaSettings->getSectionMode(),
             '#ajax' => [
                 'callback' => '::toggleSectionMode',
                 'wrapper' => 'section-mode',
             ]
         ];
 
-        $selectedNO = $form_state->getValue('national_organisation_id') ?: $coreSettings->getNationalOrganisationID();
-        $sectionModeEnabled = $form_state->getValue('section_mode') ?? $coreSettings->getSectionMode();
+        $selectedNO = $form_state->getValue('national_organisation_id') ?: $omniaSettings->getNationalOrganisationID();
+        $sectionModeEnabled = $form_state->getValue('section_mode') ?? $omniaSettings->getSectionMode();
 
         if ($sectionModeEnabled && !empty($selectedNO)) {
             /** @var Organisation $nationalOrganisation */
@@ -185,7 +185,7 @@ class SettingsForm extends ConfigFormBase
                 '#description' => $this->t('Select the name of your Section.'),
                 '#options' => $sectionNames ?? [],
                 '#empty_option' => $this->t('- Select -'),
-                '#default_value' => $coreSettings->getOrganisationID(),
+                '#default_value' => $omniaSettings->getOrganisationID(),
                 '#required' => true,
                 '#validated' => true
             ];
@@ -195,25 +195,25 @@ class SettingsForm extends ConfigFormBase
             '#type' => 'details',
             '#title' => $this->t('Stripe Settings'),
             '#description' => $this->t('Configuration for the Stripe Integration.'),
-            '#open' => $form_state->getValue('switch_stripe') ?? $coreSettings->getStripeSwitch()
+            '#open' => $form_state->getValue('switch_stripe') ?? $omniaSettings->getStripeSwitch()
         ];
 
         $form['stripe']['stripe_secret_key'] = [
             '#type' => 'textfield',
             '#title' => $this->t('Stripe Secret Key'),
             '#description' => $this->t('Enter the Stripe Secret Key.'),
-            '#default_value' => $form_state->getValue('stripe_secret_key') ?? $coreSettings->getStripeSecretKey(),
-            '#required' => $form_state->getValue('switch_stripe') ?? $coreSettings->getStripeSwitch()
+            '#default_value' => $form_state->getValue('stripe_secret_key') ?? $omniaSettings->getStripeSecretKey(),
+            '#required' => $form_state->getValue('switch_stripe') ?? $omniaSettings->getStripeSwitch()
         ];
 
         $form['google'] = [
             '#type' => 'details',
             '#title' => $this->t('Google Settings'),
             '#description' => $this->t('Configuration for the Google Integration.'),
-            '#open' => $form_state->getValue('switch_google') ?? $coreSettings->getGoogleSwitch()
+            '#open' => $form_state->getValue('switch_google') ?? $omniaSettings->getGoogleSwitch()
         ];
 
-        if ($email = $coreSettings->getGoogleClientEmail()) {
+        if ($email = $omniaSettings->getGoogleClientEmail()) {
             $form['google']['current_status'] = [
                 '#markup' => '<div class="alert alert-success">' .
                     $this->t('Currently connected as: <strong>@email</strong>', ['@email' => $email]) .
@@ -234,32 +234,32 @@ class SettingsForm extends ConfigFormBase
             '#attributes' => [
                 'accept' => '.json',
             ],
-            '#disabled' => !($form_state->getValue('switch_google') ?? $coreSettings->getGoogleSwitch()),
-            '#required' => empty($email) && ($form_state->getValue('switch_google') ?? $coreSettings->getGoogleSwitch())
+            '#disabled' => !($form_state->getValue('switch_google') ?? $omniaSettings->getGoogleSwitch()),
+            '#required' => empty($email) && ($form_state->getValue('switch_google') ?? $omniaSettings->getGoogleSwitch())
         ];
 
         $form['google']['google_issuer_id'] = [
             '#type' => 'textfield',
             '#title' => $this->t('Issuer ID'),
             '#description' => $this->t('The Issuer ID from the Google Wallet Console.'),
-            '#default_value' => $coreSettings->getGoogleIssuerID(),
-            '#disabled' => !($form_state->getValue('switch_google') ?? $coreSettings->getGoogleSwitch()),
+            '#default_value' => $omniaSettings->getGoogleIssuerID(),
+            '#disabled' => !($form_state->getValue('switch_google') ?? $omniaSettings->getGoogleSwitch()),
         ];
 
         $form['apple'] = [
             '#type' => 'details',
             '#title' => $this->t('Apple Wallet Settings'),
             '#description' => $this->t('Configuration for the Apple Wallet Service.'),
-            '#open' => $form_state->getValue('switch_apple') ?? $coreSettings->getAppleSwitch()
+            '#open' => $form_state->getValue('switch_apple') ?? $omniaSettings->getAppleSwitch()
         ];
 
         $form['apple']['apple_team_id'] = [
             '#type' => 'textfield',
             '#title' => $this->t('Apple Team ID'),
             '#description' => $this->t('Your Apple Team ID.'),
-            '#default_value' => $coreSettings->getAppleTeamID(),
-            '#disabled' => !($form_state->getValue('switch_apple') ?? $coreSettings->getAppleSwitch()),
-            '#required' => $form_state->getValue('switch_apple') ?? $coreSettings->getAppleSwitch()
+            '#default_value' => $omniaSettings->getAppleTeamID(),
+            '#disabled' => !($form_state->getValue('switch_apple') ?? $omniaSettings->getAppleSwitch()),
+            '#required' => $form_state->getValue('switch_apple') ?? $omniaSettings->getAppleSwitch()
         ];
 
         return parent::buildForm($form, $form_state);
@@ -298,7 +298,7 @@ class SettingsForm extends ConfigFormBase
      */
     public function submitForm(array &$form, FormStateInterface $form_state): void
     {
-        $coreSettings = new CoreSettings($this->configFactory, true);
+        $omniaSettings = new OmniaSettings($this->configFactory, true);
 
         if ($form_state->getValue('section_mode')) {
             $sectionMode = true;
@@ -314,7 +314,7 @@ class SettingsForm extends ConfigFormBase
             $selectedOrganisation = $this->entityTypeManager->getStorage('esn_organisation')->load($nationalOrganisationID);
         }
 
-        $coreSettings
+        $omniaSettings
             ->setStripeSwitch($form_state->getValue('switch_stripe'))
             ->setGoogleSwitch($form_state->getValue('switch_google'))
             ->setAppleSwitch($form_state->getValue('switch_apple'))
@@ -328,7 +328,7 @@ class SettingsForm extends ConfigFormBase
             ->setAppleTeamID($form_state->getValue('apple_team_id'));
 
         if ($googleCredentials = $form_state->get('parsed_google_credentials')) {
-            $coreSettings
+            $omniaSettings
                 ->setGoogleClientEmail($googleCredentials['client_email'])
                 ->setGooglePrivateKey($googleCredentials['private_key'])
                 ->setGooglePrivateKeyID($googleCredentials['client_id'] ?? '')
@@ -338,7 +338,7 @@ class SettingsForm extends ConfigFormBase
             $this->messenger()->addStatus($this->t('Credentials updated for @email. Remember to share permissions with this email!', ['@email' => $googleCredentials['client_email']]));
         }
 
-        $coreSettings->save();
+        $omniaSettings->save();
 
         parent::submitForm($form, $form_state);
     }

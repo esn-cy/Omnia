@@ -1,14 +1,14 @@
 <?php /** @noinspection PhpUnused */
 
-namespace Drupal\esn_cyprus_core\Config;
+namespace Drupal\omnia\Config;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 
-class CoreSettings
+class OmniaSettings
 {
-    public const CONFIG_NAME = 'esn_cyprus_core.settings';
+    public const CONFIG_NAME = 'omnia.settings';
 
     private Config|ImmutableConfig $config;
 

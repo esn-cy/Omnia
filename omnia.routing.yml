@@ -1,0 +1,15 @@
+omnia.home:
+  path: '/admin/omnia'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Omnia Configuration Home'
+  requirements:
+    _permission: 'manage omnia settings'
+
+omnia.settings:
+  path: '/admin/omnia/settings'
+  defaults:
+    _form: '\Drupal\omnia\Form\SettingsForm'
+    _title: 'Omnia Settings'
+  requirements:
+    _permission: 'manage omnia settings'

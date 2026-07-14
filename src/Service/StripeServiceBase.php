@@ -1,11 +1,11 @@
 <?php /** @noinspection PhpUnused */
 
-namespace Drupal\esn_cyprus_core\Service;
+namespace Drupal\omnia\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\esn_cyprus_core\Config\CoreSettings;
+use Drupal\omnia\Config\OmniaSettings;
 use Exception;
 use Stripe\Event;
 use Stripe\Exception\ApiErrorException;
@@ -41,7 +41,7 @@ class StripeServiceBase
             return $this->client;
         }
 
-        $moduleConfig = new CoreSettings($this->configFactory);
+        $moduleConfig = new OmniaSettings($this->configFactory);
 
         if ($stripeSecretKey = $moduleConfig->getStripeSecretKey()) {
             $client = new StripeClient($stripeSecretKey);
@@ -61,7 +61,7 @@ class StripeServiceBase
      *
      * @return ?PaymentLink The payment link object that was created, null if creation failed.
      *
-     * @throws Exception It's thrown when the ESN Cyprus Core Stripe configuration is invalid.
+     * @throws Exception It's thrown when the Omnia Stripe configuration is invalid.
      */
     protected function createPaymentLink(array $prices, ?array $metadata = null): ?PaymentLink
     {
@@ -89,7 +89,7 @@ class StripeServiceBase
      *
      * @return bool A boolean value indicating if the link disabling was successful.
      *
-     * @throws Exception It's thrown when the ESN Cyprus Core Stripe configuration is invalid.
+     * @throws Exception It's thrown when the Omnia Stripe configuration is invalid.
      */
     public function disablePaymentLink(string $linkID): bool
     {
@@ -137,7 +137,7 @@ class StripeServiceBase
      *
      * @return ?Price The price object that was retrieved, null if there was a problem retrieving it.
      *
-     * @throws Exception It's thrown when the ESN Cyprus Core Stripe configuration is invalid.
+     * @throws Exception It's thrown when the Omnia Stripe configuration is invalid.
      */
     protected function getPrice(string $priceID): ?Price
     {

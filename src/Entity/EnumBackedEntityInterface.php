@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\esn_cyprus_core\Entity;
+namespace Drupal\omnia\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 

@@ -1,0 +1,7 @@
+name: 'Omnia'
+type: module
+description: 'An umbrella of services designed to help ESN digitalize its operations.'
+core_version_requirement: ^10 || ^11
+package: Custom
+
+php: 8.2

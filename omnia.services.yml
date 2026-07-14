@@ -1,0 +1,34 @@
+#file: noinspection ComposeUnknownKeys
+services:
+  logger.channel.omnia:
+    parent: logger.channel_base
+    arguments: [ 'omnia' ]
+
+  omnia.file_service:
+    class: Drupal\omnia\Service\FileServiceBase
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@file.repository'
+      - '@file.usage'
+      - '@logger.factory'
+
+  omnia.stripe_service:
+    class: Drupal\omnia\Service\StripeServiceBase
+    arguments:
+      - '@config.factory'
+      - '@logger.factory'
+
+  omnia.google_service:
+    class: Drupal\omnia\Service\GoogleServiceBase
+    arguments:
+      - '@config.factory'
+      - '@omnia.file_service'
+      - '@logger.factory'
+
+  omnia.apple_service:
+    class: Drupal\omnia\Service\AppleWalletServiceBase
+    arguments:
+      - '@omnia.file_service'
+      - '@http_client'
+      - '@logger.factory'

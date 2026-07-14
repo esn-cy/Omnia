@@ -1,11 +1,11 @@
 <?php /** @noinspection PhpUnused */
 
-namespace Drupal\esn_cyprus_core\Service;
+namespace Drupal\omnia\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\esn_cyprus_core\Config\CoreSettings;
+use Drupal\omnia\Config\OmniaSettings;
 use Exception;
 use Firebase\JWT\JWT;
 use Google\Client as GoogleClient;
@@ -33,7 +33,7 @@ class GoogleServiceBase
     {
         $this->configFactory = $configFactory;
         $this->fileService = $fileService;
-        $this->logger = $loggerFactory->get('esn_cyprus_core');
+        $this->logger = $loggerFactory->get('omnia');
     }
 
 
@@ -48,10 +48,10 @@ class GoogleServiceBase
             return $this->client;
         }
 
-        $coreSettings = new CoreSettings($this->configFactory);
+        $omniaSettings = new OmniaSettings($this->configFactory);
 
-        $clientEmail = $coreSettings->getGoogleClientEmail();
-        $privateKey = $coreSettings->getGooglePrivateKey();
+        $clientEmail = $omniaSettings->getGoogleClientEmail();
+        $privateKey = $omniaSettings->getGooglePrivateKey();
 
         if (empty($clientEmail) || empty($privateKey)) {
             $this->logger->error('Google Service Account credentials were not configured.');
@@ -62,11 +62,11 @@ class GoogleServiceBase
 
         $authConfig = [
             'type' => 'service_account',
-            'project_id' => $coreSettings->getGoogleProjectID(),
-            'private_key_id' => $coreSettings->getGooglePrivateKeyID(),
+            'project_id' => $omniaSettings->getGoogleProjectID(),
+            'private_key_id' => $omniaSettings->getGooglePrivateKeyID(),
             'private_key' => $privateKey,
             'client_email' => $clientEmail,
-            'client_id' => $coreSettings->getGoogleClientID(),
+            'client_id' => $omniaSettings->getGoogleClientID(),
             'auth_uri' => 'https://accounts.google.com/o/oauth2/auth',
             'token_uri' => 'https://oauth2.googleapis.com/token',
             'auth_provider_x509_cert_url' => 'https://www.googleapis.com/oauth2/v1/certs',
@@ -106,8 +106,8 @@ class GoogleServiceBase
             throw new Exception('Google Service Account credentials were not configured.');
         }
 
-        $coreSettings = new CoreSettings($this->configFactory);
-        $issuerID = $coreSettings->getGoogleIssuerID();
+        $omniaSettings = new OmniaSettings($this->configFactory);
+        $issuerID = $omniaSettings->getGoogleIssuerID();
 
         $classID = "$issuerID.$className";
 
@@ -152,10 +152,10 @@ class GoogleServiceBase
             throw new Exception('Google Service Account credentials were not configured.');
         }
 
-        $coreSettings = new CoreSettings($this->configFactory);
+        $omniaSettings = new OmniaSettings($this->configFactory);
 
-        $clientEmail = $coreSettings->getGoogleClientEmail();
-        $privateKey = $coreSettings->getGooglePrivateKey();
+        $clientEmail = $omniaSettings->getGoogleClientEmail();
+        $privateKey = $omniaSettings->getGooglePrivateKey();
 
         $claims = [
             'iss' => $clientEmail,
@@ -196,9 +196,9 @@ class GoogleServiceBase
             throw new Exception('Google Service Account credentials were not configured.');
         }
 
-        $coreSettings = new CoreSettings($this->configFactory);
+        $omniaSettings = new OmniaSettings($this->configFactory);
 
-        $issuerID = $coreSettings->getGoogleIssuerID();
+        $issuerID = $omniaSettings->getGoogleIssuerID();
 
         $objectID = "$issuerID.$objectName";
         try {
@@ -324,9 +324,9 @@ class GoogleServiceBase
             throw new Exception('Google Service Account credentials were not configured.');
         }
 
-        $coreSettings = new CoreSettings($this->configFactory);
+        $omniaSettings = new OmniaSettings($this->configFactory);
 
-        if (!($issuerID = $coreSettings->getGoogleIssuerID())) {
+        if (!($issuerID = $omniaSettings->getGoogleIssuerID())) {
             throw new Exception('Google Wallet Issuer ID is missing from settings.');
         }
 

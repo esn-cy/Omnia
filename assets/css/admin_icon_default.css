@@ -1,7 +1,7 @@
-.icon-esn-cyprus-core-config:before {
-    background-image: url("../images/core.svg");
+.icon-omnia-config:before {
+    background-image: url("../images/logo.svg");
 }
-.icon-esn-cyprus-core-config:active:before,
-.icon-esn-cyprus-core-config.is-active:before {
-    background-image: url("../images/core.svg");
+.icon-omnia-config:active:before,
+.icon-omnia-config.is-active:before {
+    background-image: url("../images/logo.svg");
 }

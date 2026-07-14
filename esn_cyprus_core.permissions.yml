@@ -1,4 +1,0 @@
-manage core settings:
-  title: 'Manage the ESN Cyprus Core settings'
-  description: 'Allows users to manage the ESN Cyprus Core settings'
-  restrict access: true
