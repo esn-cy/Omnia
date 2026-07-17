@@ -75,7 +75,7 @@ class GoogleServiceBase
 
         try {
             $client = new GoogleClient();
-            $client->setApplicationName('ESN Membership Manager');
+            $client->setApplicationName('Omnia');
             $client->setScopes([Sheets::SPREADSHEETS, Walletobjects::WALLET_OBJECT_ISSUER]);
             $client->setAuthConfig($authConfig);
             $client->setAccessType('offline');

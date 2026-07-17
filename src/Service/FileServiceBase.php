@@ -11,15 +11,18 @@ use Drupal\Core\File\Exception\NotRegularDirectoryException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\FileInterface;
 use Drupal\file\FileRepositoryInterface;
 use Drupal\file\FileUsage\DatabaseFileUsageBackend;
+use Drupal\omnia\StreamWrapper\StreamWrapperBase;
 use Exception;
 use finfo;
 use ValueError;
 
 /**
- * Service for managing files within the ESN Membership Manager module.
+ * Service for managing files within the Omnia modules.
  *
  * Provides utility methods for loading, reading, moving, saving, replacing, and deleting managed files and directories in Drupal.
  */
@@ -29,6 +32,7 @@ class FileServiceBase
     protected FileSystemInterface $fileSystem;
     protected FileRepositoryInterface $fileRepository;
     protected DatabaseFileUsageBackend $fileUsage;
+    protected StreamWrapperManagerInterface $streamWrapperManager;
     protected LoggerChannelInterface $logger;
 
     public function __construct(
@@ -36,6 +40,7 @@ class FileServiceBase
         FileSystemInterface           $fileSystem,
         FileRepositoryInterface       $fileRepository,
         DatabaseFileUsageBackend      $fileUsage,
+        StreamWrapperManagerInterface $streamWrapperManager,
         LoggerChannelFactoryInterface $loggerFactory
     )
     {
@@ -43,6 +48,7 @@ class FileServiceBase
         $this->fileSystem = $fileSystem;
         $this->fileRepository = $fileRepository;
         $this->fileUsage = $fileUsage;
+        $this->streamWrapperManager = $streamWrapperManager;
         $this->logger = $loggerFactory->get('omnia');
     }
 
@@ -291,6 +297,19 @@ class FileServiceBase
         }
     }
 
+    private function isPathSafe(string $path): bool
+    {
+        $scheme = StreamWrapperManager::getScheme($path);
+
+        if (!$scheme) {
+            return false;
+        }
+
+        $wrapper = $this->streamWrapperManager->getViaScheme($scheme);
+
+        return $wrapper instanceof StreamWrapperBase;
+    }
+
     /**
      * Checks if a directory is empty.
      *
@@ -300,7 +319,7 @@ class FileServiceBase
      */
     public function isDirectoryEmpty(string $path): bool
     {
-        if (!str_starts_with($path, 'membership://')) {
+        if (!$this->isPathSafe($path)) {
             return false;
         }
 
@@ -316,7 +335,7 @@ class FileServiceBase
     /**
      * Recursively deletes a directory from the filesystem.
      *
-     * Contains a safeguard to prevent deletion of paths not starting with the 'membership://' scheme.
+     * Contains a safeguard to prevent deletion of paths not starting with an Omnia scheme.
      *
      * @param string $path The URI or path to the directory.
      *
@@ -324,7 +343,7 @@ class FileServiceBase
      */
     public function deleteDirectory(string $path): bool
     {
-        if (!str_starts_with($path, 'membership://')) {
+        if (!$this->isPathSafe($path)) {
             return false;
         }
         $this->fileSystem->deleteRecursive($path);
@@ -340,7 +359,7 @@ class FileServiceBase
      *
      * @return bool True if the file was moved successfully, false otherwise.
      */
-    public function moveFile(int|string|null $fileID, string $directory, string $renameTo = null): bool
+    public function moveFile(int|string|null $fileID, string $directory, ?string $renameTo = null): bool
     {
         $file = $this->getFile($fileID);
         if (empty($file)) {

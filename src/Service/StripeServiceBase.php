@@ -27,7 +27,7 @@ class StripeServiceBase
     )
     {
         $this->configFactory = $configFactory;
-        $this->logger = $loggerFactory->get('esn_membership_manager');
+        $this->logger = $loggerFactory->get('omnia');
     }
 
     /**
