@@ -6,6 +6,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\file\FileInterface;
 use Exception;
 
@@ -21,6 +22,7 @@ abstract class EnumBackedEntityBase extends ContentEntityBase implements EnumBac
 
         $enumClass = static::getFieldEnumClass();
 
+        /** @var FieldEnumInterface $field */
         foreach ($enumClass::cases() as $field) {
             $type = $field->type();
             $fields[$field->value] = BaseFieldDefinition::create($type)
@@ -31,6 +33,10 @@ abstract class EnumBackedEntityBase extends ContentEntityBase implements EnumBac
                 $fields[$field->value]->addConstraint('UniqueField', [
                     'message' => "The {$field->label()} must be unique."
                 ]);
+            }
+
+            if ($field->unlimitedCardinality()) {
+                $fields[$field->value]->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
             }
 
             if (!empty($field->settings())) {

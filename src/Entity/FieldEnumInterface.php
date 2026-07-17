@@ -35,6 +35,13 @@ interface FieldEnumInterface extends BackedEnum
     public function unique(): bool;
 
     /**
+     * Determines whether the field must have unlimited cardinality.
+     *
+     * @return bool True if unique, false otherwise.
+     */
+    public function unlimitedCardinality(): bool;
+
+    /**
      * Retrieves the default value for the field.
      *
      * @return mixed The default value, or null if there is no default.
