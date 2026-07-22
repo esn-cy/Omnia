@@ -109,6 +109,23 @@ class FileServiceBase
     }
 
     /**
+     * Gets the filename of a file.
+     *
+     * @param int|string|null $fileID The ID of the file entity.
+     *
+     * @return string|null The name to the file, or `null` if it can't be determined.
+     */
+    public function getFileName(int|string|null $fileID): ?string
+    {
+        $file = $this->getFile($fileID);
+        if (empty($file)) {
+            return null;
+        }
+
+        return $file->getFilename();
+    }
+
+    /**
      * Gets the web-accessible URL for a file.
      *
      * @param int|string|null $fileID The ID of the file entity.
