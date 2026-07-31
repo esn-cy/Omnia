@@ -107,6 +107,17 @@ abstract class EnumBackedEntityBase extends ContentEntityBase implements EnumBac
     {
         $drupalField = $this->get($field->value);
 
+        if ($field->unlimitedCardinality()) {
+            $values = [];
+            foreach ($drupalField as $item) {
+                $values[] = match ($field->type()) {
+                    'entity_reference' => $item->target_id,
+                    default => $item->value,
+                };
+            }
+            return $values;
+        }
+
         return match ($field->type()) {
             'entity_reference' => $drupalField->target_id,
             default => $drupalField->value,
