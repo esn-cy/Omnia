@@ -3,5 +3,11 @@ type: module
 description: 'An umbrella of services designed to help ESN digitalize its operations.'
 core_version_requirement: ^10 || ^11
 package: Custom
+configure: omnia.settings
+
+dependencies:
+  - drupal:file
+  - drupal:simple_oauth
+  - esn:esn_accounts_api
 
 php: 8.2

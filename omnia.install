@@ -1,0 +1,39 @@
+<?php
+
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+
+/**
+ * @throws Exception
+ */
+function omnia_update_10500(): void
+{
+    try {
+        $consumerStorage = Drupal::entityTypeManager()->getStorage('consumer');
+    } catch (InvalidPluginDefinitionException|PluginNotFoundException $e) {
+        throw new Exception('SimpleOAuth storage was inaccessible: ' . $e->getMessage());
+    }
+
+    $clientUUID = '4f6d6e69-6120-5363-616e-6e6572204170';
+
+    $client = $consumerStorage->loadByProperties(['uuid' => $clientUUID]);
+    if (empty($client)) {
+        $consumer = $consumerStorage->create([
+            'uuid' => $clientUUID,
+            'label' => 'Omnia Scanner App',
+            'machine_name' => 'omnia_scanner_app',
+            'description' => 'Authentication client for the Omnia Scanner app.',
+            'client_id' => $clientUUID,
+            'secret' => '',
+            'confidential' => false,
+            'third_party' => false,
+            'pkce' => true,
+            'redirect' => 'org.esncy.esnscanner://auth/callback',
+            'grant_types' => [
+                'authorization_code',
+                'refresh_token',
+            ],
+        ]);
+        $consumer->save();
+    }
+}
