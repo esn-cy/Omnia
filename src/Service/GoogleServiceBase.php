@@ -36,9 +36,8 @@ class GoogleServiceBase
         $this->logger = $loggerFactory->get('omnia');
     }
 
-
     /**
-     * Gets the initialized Google client.
+     * Gets the initialised Google client.
      *
      * @return ?GoogleClient The Google client instance, or null if the configuration is missing or invalid.
      */
@@ -88,6 +87,32 @@ class GoogleServiceBase
             $this->logger->error('Failed to initialize Google Client: @message', ['@message' => $e->getMessage()]);
             return NULL;
         }
+    }
+
+    protected function getAuthURL(
+        string  $clientID,
+        string  $clientSecret,
+        string  $redirectURI,
+        ?string $state = null
+    ): string
+    {
+        $client = new GoogleClient();
+
+        $client->setClientId($clientID);
+        $client->setClientSecret($clientSecret);
+
+        $client->setRedirectUri($redirectURI);
+
+        $client->setPrompt('select_account');
+
+        $client->addScope('email');
+        $client->addScope('profile');
+
+        if ($state !== null) {
+            $client->setState($state);
+        }
+
+        return $client->createAuthUrl();
     }
 
     /**

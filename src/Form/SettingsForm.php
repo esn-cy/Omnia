@@ -8,6 +8,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -21,11 +22,12 @@ class SettingsForm extends ConfigFormBase
     protected EntityTypeManagerInterface $entityTypeManager;
 
     public function __construct(
-        ConfigFactoryInterface     $configFactory,
-        EntityTypeManagerInterface $entityTypeManager,
+        ConfigFactoryInterface      $configFactory,
+        TypedConfigManagerInterface $typedConfigManager,
+        EntityTypeManagerInterface  $entityTypeManager,
     )
     {
-        parent::__construct($configFactory);
+        parent::__construct($configFactory, $typedConfigManager);
         $this->entityTypeManager = $entityTypeManager;
     }
 
@@ -34,11 +36,15 @@ class SettingsForm extends ConfigFormBase
         /** @var ConfigFactoryInterface $configFactory */
         $configFactory = $container->get('config.factory');
 
+        /** @var TypedConfigManagerInterface $typedConfigManager */
+        $typedConfigManager = $container->get('config.typed');
+
         /** @var EntityTypeManagerInterface $entityTypeManager */
         $entityTypeManager = $container->get('entity_type.manager');
 
         return new static(
             $configFactory,
+            $typedConfigManager,
             $entityTypeManager,
         );
     }

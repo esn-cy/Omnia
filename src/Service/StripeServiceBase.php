@@ -31,7 +31,7 @@ class StripeServiceBase
     }
 
     /**
-     * Gets the initialized Stripe client.
+     * Gets the initialised Stripe client.
      *
      * @return ?StripeClient The Stripe client instance, or null if the configuration is missing.
      */

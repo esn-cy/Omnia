@@ -27,19 +27,22 @@
     "stripe/stripe-php": "^20.1",
     "google/auth": "^1.50",
     "google/apiclient": "^2.19",
-    "google/apiclient-services": "^0.441",
+    "google/apiclient-services": "^v0.456",
     "pkpass/pkpass": "^2.5.1",
-    "ext-fileinfo": "*"
+    "ext-fileinfo": "*",
+    "symfony/intl": "^6.4 || ^7.0 || ^8.0"
   },
   "require-dev": {
-    "drupal/core": "^10"
+    "drupal/core-dev": "^10"
   },
   "config": {
     "allow-plugins": {
-      "composer/installers": true,
-      "drupal/core-vendor-hardening": true,
-      "drupal/core-recipe-unpack": true,
-      "drupal/core-project-message": true
+      "symfony/runtime": true,
+      "drupal/core-composer-scaffold": false,
+      "phpstan/extension-installer": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "php-http/discovery": true,
+      "tbachert/spi": true
     }
   },
   "repositories": {

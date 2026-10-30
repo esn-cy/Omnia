@@ -20,6 +20,7 @@ abstract class EnumBackedEntityBase extends ContentEntityBase implements EnumBac
     {
         $fields = parent::baseFieldDefinitions($entity_type);
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $enumClass = static::getFieldEnumClass();
 
         /** @var FieldEnumInterface $field */

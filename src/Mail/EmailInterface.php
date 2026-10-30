@@ -60,7 +60,7 @@ interface EmailInterface
     /**
      * Returns the variables required by the Twig template.
      *
-     * By utilizing the null coalescing operator (??), this method gracefully returns empty strings when called on an
+     * By utilising the null coalescing operator (??), this method gracefully returns empty strings when called on an
      * uninitialized instance during hook_theme registration, while returning actual data at runtime.
      *
      * @return array An associative array of template variables.

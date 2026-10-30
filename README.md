@@ -22,7 +22,7 @@ This module registers several core services that can be injected into your custo
   private images.
 * **Apple Wallet Service (`omnia.apple_service`)**: Generates `.pkpass` files using the `pkpass/pkpass`
   library and handles sending APNs push notifications for pass updates.
-* **Email Manager (`omnia.email_manager`)**: A utility for sending emails seamlessly using Drupal's Twig
+* **Email Service (`omnia.email_service`)**: A utility for sending emails seamlessly using Drupal's Twig
   rendering system in isolation.
 * **Stripe Service (`omnia.stripe_service`)**: Integration with the Stripe API for creating payment links,
   fetching prices, and validating webhooks.
