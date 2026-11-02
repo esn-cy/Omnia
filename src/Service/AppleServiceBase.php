@@ -28,6 +28,23 @@ class AppleServiceBase
         $this->logger = $loggerFactory->get('omnia');
     }
 
+    protected function getAuthURL(string $clientID, string $redirectURI, ?string $state = null): string
+    {
+        $params = [
+            'client_id' => $clientID,
+            'redirect_uri' => $redirectURI,
+            'response_type' => 'code id_token',
+            'scope' => 'name email',
+            'response_mode' => 'form_post',
+        ];
+
+        if ($state !== null) {
+            $params['state'] = $state;
+        }
+
+        return 'https://appleid.apple.com/auth/authorize?' . http_build_query($params);
+    }
+
     /**
      * Creates an Apple Wallet pass.
      *

@@ -35,7 +35,7 @@ services:
       - '@logger.factory'
 
   omnia.apple_service:
-    class: Drupal\omnia\Service\AppleWalletServiceBase
+    class: Drupal\omnia\Service\AppleServiceBase
     arguments:
       - '@omnia.file_service'
       - '@http_client'

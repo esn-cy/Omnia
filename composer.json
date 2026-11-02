@@ -25,6 +25,7 @@
     "esn/esn_accounts_api": "^1.1",
     "drupal/simple_oauth": "^6.1",
     "stripe/stripe-php": "^20.1",
+    "firebase/php-jwt": "^7.2",
     "google/auth": "^1.50",
     "google/apiclient": "^2.19",
     "google/apiclient-services": "^v0.456",
